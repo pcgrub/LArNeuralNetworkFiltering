@@ -47,23 +47,24 @@ class RunSingleModel:
         self.create_input_files()
 
         # create empty value_loss history array with an entry for each epoch
-        self.value_loss = np.zeros((1, epochs))
+        # self.value_loss = np.zeros((1, epochs))
 
     def run(self):
         '''Execute 1 Training-run. Write Loss-files
-        
+
         '''
 
-        if self.comments == '':
-            loss_path = './losses/' + self.name + '/'
-        else:
-            loss_path = './losses/' + self.name + '/' + self.comments + '/'
+        #if self.comments == '':
+        #    loss_path = './losses/' + self.name + '/'
+        #else:
+        #    loss_path = './losses/' + self.name + '/' + self.comments + '/'
 
         train, test = self.create_training_data()
-        self.value_loss = self.run_model(train, test, self.model)
-        os.makedirs(loss_path, exist_ok=True)
-        det_file_name = loss_path + 'detailedlosses_' + self.sim_title + '.txt'
-        np.savetxt(det_file_name, self.value_loss, delimiter=',')
+        #self.value_loss = self.run_model(train, test, self.model)
+        self.run_model(train, test, self.model)
+        #os.makedirs(loss_path, exist_ok=True)
+        #det_file_name = loss_path + 'detailedlosses_' + self.sim_title + '.txt'
+        #np.savetxt(det_file_name, self.value_loss, delimiter=',')
 
     def run_model(self, train, test, model, run=0):
 
@@ -73,7 +74,7 @@ class RunSingleModel:
             model_path = './saved_models/' + self.name + '/' \
                 + self.comments + '/'
 
-            os.makedirs(model_path, exist_ok=True)
+        os.makedirs(model_path, exist_ok=True)
         print(self.sim_title)
 
         log_dir = model_path + 'Graph/' + self.sim_title \
@@ -86,7 +87,7 @@ class RunSingleModel:
                             epochs=self.epochs, verbose=2,
                             callbacks=[tbCallBack])
         self.model.save(model_path + self.sim_title + ".h5")
-        return np.asarray(history.history['val_loss'])
+        # return np.asarray(history.history['val_loss'])
 
     def create_input_files(self,
                     path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/',
