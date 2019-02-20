@@ -67,8 +67,6 @@ class TrainingData():
         Y_train = Y_train.reshape(total_length, 1, 1)
         Y_test = Y_test.reshape(total_length, 1, 1)
 
-        # print(X_train.shape)
-        # print(Y_train.shape)
         return (X_train, Y_train), (X_test, Y_test)
 
     def split_up(self, sequence, slice_len):
