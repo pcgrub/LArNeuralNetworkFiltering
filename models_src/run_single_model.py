@@ -14,7 +14,7 @@ K.set_session(K.tf.Session(config=tf_config))
 
 class RunSingleModel:
 
-    def __init__(self, model, epochs, params, training_params, comments):
+    def __init__(self, model, runs, epochs, params, training_params, comments):
         '''
         Construct and initialize a model including all parameters required:
         Parameters include:
@@ -46,25 +46,45 @@ class RunSingleModel:
         # fill the file list with default files
         self.create_input_files()
 
+        # Number of Runs
+        self.runs = runs
+
         # create empty value_loss history array with an entry for each epoch
         # self.value_loss = np.zeros((1, epochs))
 
     def run(self):
-        '''Execute 1 Training-run. Write Loss-files
 
-        '''
-
-        #if self.comments == '':
+        # if self.comments == '':
         #    loss_path = './losses/' + self.name + '/'
-        #else:
-        #    loss_path = './losses/' + self.name + '/' + self.comments + '/'
+        # else:
+        #     loss_path = './losses/' + self.name + '/' + self.comments + '/'
+        # os.makedirs(loss_path, exist_ok=True)
 
         train, test = self.create_training_data()
-        #self.value_loss = self.run_model(train, test, self.model)
-        self.run_model(train, test, self.model)
-        #os.makedirs(loss_path, exist_ok=True)
-        #det_file_name = loss_path + 'detailedlosses_' + self.sim_title + '.txt'
-        #np.savetxt(det_file_name, self.value_loss, delimiter=',')
+        # details_per_run = np.zeros((self.runs, self.epochs))
+
+        for i in range(self.runs):
+            print('run number: ' + str(i + 1))
+            # details_per_run[i, :] = self.run_model(train, test, self.model)
+            self.run_model(train, test, self.model, i + 1)
+
+        # CODE OBSOLETE DUE TO TENSORBOARD
+        # mean_hist = np.mean(details_per_run[:, -1])
+        # std_hist = np.mean(details_per_run[:, -1])
+
+        # det_file_name = loss_path + 'detaillosses_' + self.sim_title + '.txt'
+        # np.savetxt(det_file_name, details_per_run, delimiter=',')
+
+        # tp_to_string = ",".join([str(x) for x in self.training_params])
+        # p_to_string = ",".join([str(x) for x in self.params])
+        # params_to_string = p_to_string + ',' + str(self.runs) + ',' \
+        #                                                      + tp_to_string
+        # line = str(mean_hist) + ',' + str(std_hist) \
+        #                           + ',' + params_to_string + '\n'
+
+        # output_file = open(loss_path + 'endlosses_' + self.name + '.txt', 'a')
+        # output_file.write(line)
+        # output_file.close()
 
     def run_model(self, train, test, model, run=0):
 
@@ -83,9 +103,8 @@ class RunSingleModel:
         tbCallBack = TensorBoard(log_dir=log_dir, histogram_freq=0,
                                  write_graph=True, write_images=True)
 
-        history = model.fit(*train, validation_data=test,
-                            epochs=self.epochs, verbose=2,
-                            callbacks=[tbCallBack])
+        model.fit(*train, validation_data=test, epochs=self.epochs, verbose=2,
+                  callbacks=[tbCallBack])
         self.model.save(model_path + self.sim_title + ".h5")
         # return np.asarray(history.history['val_loss'])
 
