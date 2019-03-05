@@ -24,7 +24,7 @@ def GatedRecurrentNonSequential(dim, l):
     output1 = Dense(1)(dense1)
     r1 = Reshape((1, 1))(output1)
     model = Model(inputs=inputs1, outputs=r1)
-    model.compile(loss='mean_squared_error', optimizer='adam')
+    model.compile(loss='mean_absolute_error', optimizer='adam')
     print(model.summary())
     return model
 
@@ -38,7 +38,7 @@ def GatedRecurrentTLFN(dim, l):
     dense1 = Dense(l, activation='relu')(r1)
     output1 = Dense(1)(dense1)
     model = Model(inputs=inputs1, outputs=output1)
-    model.compile(loss='mean_squared_error', optimizer='adam')
+    model.compile(loss='mean_absolute_error', optimizer='adam')
     print(model.summary())
     return model
 

@@ -25,7 +25,7 @@ class RunSingleModel:
         'comments' - info to be passed into the foldernames of output-data
         '''
         self.name = str(model.__name__)
-        self.model = model(*params)
+        self.model = model
         self.epochs = epochs
         self.params = params
         self.training_params = training_params
@@ -53,60 +53,39 @@ class RunSingleModel:
         # self.value_loss = np.zeros((1, epochs))
 
     def run(self):
-
-        # if self.comments == '':
-        #    loss_path = './losses/' + self.name + '/'
-        # else:
-        #     loss_path = './losses/' + self.name + '/' + self.comments + '/'
-        # os.makedirs(loss_path, exist_ok=True)
-
-        train, test = self.create_training_data()
-        # details_per_run = np.zeros((self.runs, self.epochs))
-
-        for i in range(self.runs):
-            print('run number: ' + str(i + 1))
-            # details_per_run[i, :] = self.run_model(train, test, self.model)
-            self.run_model(train, test, self.model, i + 1)
-
-        # CODE OBSOLETE DUE TO TENSORBOARD
-        # mean_hist = np.mean(details_per_run[:, -1])
-        # std_hist = np.mean(details_per_run[:, -1])
-
-        # det_file_name = loss_path + 'detaillosses_' + self.sim_title + '.txt'
-        # np.savetxt(det_file_name, details_per_run, delimiter=',')
-
-        # tp_to_string = ",".join([str(x) for x in self.training_params])
-        # p_to_string = ",".join([str(x) for x in self.params])
-        # params_to_string = p_to_string + ',' + str(self.runs) + ',' \
-        #                                                      + tp_to_string
-        # line = str(mean_hist) + ',' + str(std_hist) \
-        #                           + ',' + params_to_string + '\n'
-
-        # output_file = open(loss_path + 'endlosses_' + self.name + '.txt', 'a')
-        # output_file.write(line)
-        # output_file.close()
-
-    def run_model(self, train, test, model, run=0):
-
         if self.comments == '':
             model_path = './saved_models/' + self.name + '/'
         else:
             model_path = './saved_models/' + self.name + '/' \
                 + self.comments + '/'
 
+        train, test = self.create_training_data()
+
         os.makedirs(model_path, exist_ok=True)
         print(self.sim_title)
 
-        log_dir = model_path + 'Graph/' + self.sim_title \
-                             + '/run' + str(run) + '/'
 
-        tbCallBack = TensorBoard(log_dir=log_dir, histogram_freq=0,
-                                 write_graph=True, write_images=True)
+        runs_completed = 0
+        total_run_number = 1
 
-        model.fit(*train, validation_data=test, epochs=self.epochs, verbose=2,
+        while runs_completed<self.runs:
+            log_dir = model_path + 'Graph/' + self.sim_title \
+                                + '/run' + str(total_run_number) + '/'
+            if not os.path.isdir(log_dir):
+                print('run number: ' + str(runs_completed + 1))
+                self.run_model(train, test, log_dir)
+                runs_completed += 1
+            total_run_number += 1
+
+    def run_model(self, train, test, log_dir):
+        current_model = self.model(*self.params)
+        tbCallBack = TensorBoard(log_dir=log_dir, histogram_freq=0, write_images=True,
+                                 write_graph=True)
+
+        current_model.fit(*train, validation_data=test, epochs=self.epochs, verbose=2,
                   callbacks=[tbCallBack])
-        self.model.save(model_path + self.sim_title + ".h5")
-        # return np.asarray(history.history['val_loss'])
+        current_model.save(log_dir + self.sim_title + ".h5")
+
 
     def create_input_files(self,
                     path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/',
