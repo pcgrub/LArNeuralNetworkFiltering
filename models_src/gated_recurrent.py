@@ -24,7 +24,7 @@ def GatedRecurrentNonSequential(dim, l):
     output1 = Dense(1)(dense1)
     r1 = Reshape((1, 1))(output1)
     model = Model(inputs=inputs1, outputs=r1)
-    model.compile(loss='mean_absolute_error', optimizer='adam')
+    model.compile(loss='mean_squared_error', optimizer='adam')
     print(model.summary())
     return model
 
@@ -38,43 +38,134 @@ def GatedRecurrentTLFN(dim, l):
     dense1 = Dense(l, activation='relu')(r1)
     output1 = Dense(1)(dense1)
     model = Model(inputs=inputs1, outputs=output1)
-    model.compile(loss='mean_absolute_error', optimizer='adam')
+    model.compile(loss='mean_squared_error', optimizer='adam')
     print(model.summary())
     return model
 
 
-def GatedRecurrentNonSequentialAllReLU(dim, n, l):
+def GatedRecurrentNonSequentialMultiGRU2(dim, l):
+    # l=9 for Signal
+    # 10 GRUS, 5 Dense for Pile Up
     inputs1 = Input(shape=(dim, 1))
-    gru1 = GRU(l, activation='relu')(inputs1)
-    dense1 = Dense(l, activation='relu')(gru1)
+    gru1 = GRU(l, return_sequences=True)(inputs1)
+    gru2 = GRU(l)(gru1)
+    dense1 = Dense(l, activation='relu')(gru2)
     output1 = Dense(1)(dense1)
     r1 = Reshape((1, 1))(output1)
     model = Model(inputs=inputs1, outputs=r1)
-    model.compile(loss='mean_squared_error', optimizer='RMSprop')
+    model.compile(loss='mean_squared_error', optimizer='adam')
     print(model.summary())
     return model
 
-
-def GatedRecurrentTLFNAllReLU(dim, n, l):
+def GatedRecurrentNonSequentialMultiGRU3(dim, l):
+    # l=9 for Signal
+    # 10 GRUS, 5 Dense for Pile Up
     inputs1 = Input(shape=(dim, 1))
-    gru1 = GRU(1, activation='relu', return_sequences=True)(inputs1)
-    r1 = Reshape((1, dim))(gru1)
-    dense1 = Dense(dim, activation='relu')(r1)
+    gru1 = GRU(l, return_sequences=True)(inputs1)
+    gru2 = GRU(l, return_sequences=True)(gru1)
+    gru3 = GRU(l)(gru2)
+    dense1 = Dense(l, activation='relu')(gru3)
     output1 = Dense(1)(dense1)
-    model = Model(inputs=inputs1, outputs=output1)
-    model.compile(loss='mean_squared_error', optimizer='RMSprop')
+    r1 = Reshape((1, 1))(output1)
+    model = Model(inputs=inputs1, outputs=r1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
+
+def GatedRecurrentNonSequentialMultiGRU4(dim, l):
+    # l=9 for Signal
+    # 10 GRUS, 5 Dense for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(l, return_sequences=True)(inputs1)
+    gru2 = GRU(l, return_sequences=True)(gru1)
+    gru3 = GRU(l, return_sequences=True)(gru2)
+    gru4 = GRU(l)(gru3)
+    dense1 = Dense(l, activation='relu')(gru4)
+    output1 = Dense(1)(dense1)
+    r1 = Reshape((1, 1))(output1)
+    model = Model(inputs=inputs1, outputs=r1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
     print(model.summary())
     return model
 
 
-def GatedRecurrentNewLoss(dim, n, l):
+def GatedRecurrentNonSequentialMultiGRU5(dim, l):
+    # l=9 for Signal
+    # 10 GRUS, 5 Dense for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(l, return_sequences=True)(inputs1)
+    gru2 = GRU(l, return_sequences=True)(gru1)
+    gru3 = GRU(l, return_sequences=True)(gru2)
+    gru4 = GRU(l, return_sequences=True)(gru3)
+    gru5 = GRU(l)(gru4)
+    dense1 = Dense(l, activation='relu')(gru5)
+    output1 = Dense(1)(dense1)
+    r1 = Reshape((1, 1))(output1)
+    model = Model(inputs=inputs1, outputs=r1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
+
+
+def GatedRecurrentTLFNMultiGRU2(dim, l):
+    # l=12 for Signal
+    # (10,0,10) for Pile Up
     inputs1 = Input(shape=(dim, 1))
     gru1 = GRU(1, return_sequences=True)(inputs1)
-    r1 = Reshape((1, dim))(gru1)
+    gru2 = GRU(1, return_sequences=True)(gru1)
+    r1 = Reshape((1, dim))(gru2)
     dense1 = Dense(l, activation='relu')(r1)
     output1 = Dense(1)(dense1)
     model = Model(inputs=inputs1, outputs=output1)
-    model.compile(loss=weighted_loss, optimizer='RMSprop')
+    model.compile(loss='mean_squared_error', optimizer='adam')
     print(model.summary())
     return model
 
+
+def GatedRecurrentTLFNMultiGRU3(dim, l):
+    # l=12 for Signal
+    # (10,0,10) for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(1, return_sequences=True)(inputs1)
+    gru2 = GRU(1, return_sequences=True)(gru1)
+    gru3 = GRU(1, return_sequences=True)(gru2)
+    r1 = Reshape((1, dim))(gru3)
+    dense1 = Dense(l, activation='relu')(r1)
+    output1 = Dense(1)(dense1)
+    model = Model(inputs=inputs1, outputs=output1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
+
+def GatedRecurrentTLFNMultiGRU4(dim, l):
+    # l=12 for Signal
+    # (10,0,10) for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(1, return_sequences=True)(inputs1)
+    gru2 = GRU(1, return_sequences=True)(gru1)
+    gru3 = GRU(1, return_sequences=True)(gru2)
+    gru4 = GRU(1, return_sequences=True)(gru3)
+    r1 = Reshape((1, dim))(gru4)
+    dense1 = Dense(l, activation='relu')(r1)
+    output1 = Dense(1)(dense1)
+    model = Model(inputs=inputs1, outputs=output1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
+
+def GatedRecurrentTLFNMultiGRU5(dim, l):
+    # l=12 for Signal
+    # (10,0,10) for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(1, return_sequences=True)(inputs1)
+    gru2 = GRU(1, return_sequences=True)(gru1)
+    gru3 = GRU(1, return_sequences=True)(gru2)
+    gru4 = GRU(1, return_sequences=True)(gru3)
+    gru5 = GRU(1, return_sequences=True)(gru4)
+    r1 = Reshape((1, dim))(gru5)
+    dense1 = Dense(l, activation='relu')(r1)
+    output1 = Dense(1)(dense1)
+    model = Model(inputs=inputs1, outputs=output1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
