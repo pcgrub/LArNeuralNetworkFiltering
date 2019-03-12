@@ -106,7 +106,7 @@ class RunSingleModel:
 
         # save models and weights
         current_model.save(log_dir + self.sim_title + ".h5")
-
+        #del current_model
 
     def create_input_files(self,
                     path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/',
@@ -132,14 +132,17 @@ class RunSingleModel:
             np.ndarray -- numpy-array containing training data in format
             (n_of_files, input_dim, 1)
         '''
+        max_file_length = self.training_params[-1]
+        training_data_params = self.training_params[:-1]
+
         # Data and Models:
-        td_class = TrainingData(self.file_list)
+        td_class = TrainingData(self.file_list[:max_file_length])
 
         # Get the energy-scale (highest possible energy in hit samples)
         #  from the training data
         self.scale = td_class.eT_scale
 
         # create training data with input windows and and one samples as output
-        training_data = td_class.window_dim_1_sized_td(*self.training_params)
+        training_data = td_class.window_dim_1_sized_td(*training_data_params)
         # training_data = td_class.chunk_td()
         return training_data
