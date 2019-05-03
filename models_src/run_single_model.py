@@ -1,10 +1,11 @@
+import os
 import numpy as np
-# from keras.models import Model
-# import h5py
-from .training_data import TrainingData
 from keras import backend as K
 from keras.callbacks import TensorBoard
-import os
+from .training_data import TrainingData
+from .weight_mask import WeightMask
+from .pruning_callback import PruningCallback
+
 
 # Limit number of threads to one master-thread and one worker-thread
 tf_config = K.tf.ConfigProto(intra_op_parallelism_threads=1,
@@ -14,7 +15,7 @@ K.set_session(K.tf.Session(config=tf_config))
 
 class RunSingleModel:
 
-    def __init__(self, model, runs, epochs, params, training_params, comments):
+    def __init__(self, model, runs, epochs, params, training_data, comments):
         '''
         Construct and initialize a model including all parameters required:
         Parameters include:
@@ -28,7 +29,7 @@ class RunSingleModel:
         self.model = model
         self.epochs = epochs
         self.params = params
-        self.training_params = training_params
+        self.training_data = training_data
         self.comments = comments
 
         # create a title including model name and parameters
@@ -42,9 +43,6 @@ class RunSingleModel:
 
         # create empty file list for training data files
         self.file_list = []
-
-        # fill the file list with default files
-        self.create_input_files()
 
         # Number of Runs
         self.runs = runs
@@ -65,9 +63,8 @@ class RunSingleModel:
         os.makedirs(model_path, exist_ok=True)
         print(self.sim_title)
 
-
         # create training and testing data
-        train, test = self.create_training_data()
+        train, test = self.training_data
 
         # Since Multiple runs should be in a new directory each:
         # run numbers are generated taking into account
@@ -108,14 +105,16 @@ class RunSingleModel:
         current_model.save(log_dir + self.sim_title + ".h5")
         #del current_model
 
+
+
+        """
     def create_input_files(self,
                     path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/',
                     prefix='EMB_EMMiddle_0.5125X0.0125_5GeV_'):
-        """Finding all files with a certain prefix and returning
+        '''Finding all files with a certain prefix and returning
         respective paths in list
         default (path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/')
-        default (prefix='EMB_EMMiddle_0.5125X0.0125_5GeV_')
-        """
+        default (prefix='EMB_EMMiddle_0.5125X0.0125_5GeV_')'''
         files_list = []
         for file in os.listdir(path):
             if file.startswith(prefix):
@@ -137,7 +136,7 @@ class RunSingleModel:
 
         # Data and Models:
         td_class = TrainingData(self.file_list[:max_file_length])
-
+        print(self.file_list)
         # Get the energy-scale (highest possible energy in hit samples)
         #  from the training data
         self.scale = td_class.eT_scale
@@ -146,3 +145,4 @@ class RunSingleModel:
         training_data = td_class.window_dim_1_sized_td(*training_data_params)
         # training_data = td_class.chunk_td()
         return training_data
+"""
