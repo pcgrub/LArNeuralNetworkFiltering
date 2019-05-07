@@ -36,8 +36,8 @@ import numpy as np
 import h5py
 
 class TrainingData():
-    def __init__(self, path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/ofMaxFinder/',
-                 prefix='EMB_EMMiddle_0.5125X0.0125_of_'):
+    def __init__(self, path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/OFMaxFinder/',
+                 prefix='EMB_EMMiddle_0.5125X0.0125_OF_'):
         sets = self.create_input_files(path=path, prefix=prefix) 
         self.eT_scale = np.amax(sets)
         self.normalized = sets / self.eT_scale
