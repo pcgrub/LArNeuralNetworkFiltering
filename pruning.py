@@ -17,9 +17,9 @@ def main():
                   'OFdataset/Graph/GatedRecurrentTLFN-(30, 30)/' +
                   'run2/GatedRecurrentTLFN-(30, 30).h5')
 
-    thresholds = [0.1, 0.1]
-    epochs = [1, 1]
-    layers = [3, 5]
+    thresholds = [0.03, 0.01, 0.01]
+    epochs = [1, 1, 1]
+    layers = [3, 4, 5]
 
     slice_len = 30
     delay = 6
