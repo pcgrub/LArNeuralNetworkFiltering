@@ -1,5 +1,6 @@
 from keras.models import Sequential, Model
 from keras.layers import GRU, Dense, LSTM, Input, Reshape
+from keras.regularizers import l2
 from .loss_functions import *
 
 
@@ -59,3 +60,32 @@ def GatedRecurrentTLFNStacked(dim, n, l):
     model.compile(loss='mean_squared_error', optimizer='adam')
     print(model.summary())
     return model
+
+
+def GatedRecurrentTLFNreg(dim, l):
+    # l=12 for Signal
+    # (10,0,10) for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(1, return_sequences=True)(inputs1)
+    r1 = Reshape((1, dim))(gru1)
+    dense1 = Dense(l, activation='relu', kernel_regularizer=l2(0.01))(r1)
+    output1 = Dense(1, kernel_regularizer=l2(0.01))(dense1)
+    model = Model(inputs=inputs1, outputs=output1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
+
+
+def GatedRecurrentNonSequentialreg(dim, l):
+    # l=9 for Signal
+    # 10 GRUS, 5 Dense for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(l)(inputs1)
+    dense1 = Dense(l, activation='relu', kernel_regularizer=l2(0.01))(gru1)
+    output1 = Dense(1, kernel_regularizer=l2(0.01))(dense1)
+    r1 = Reshape((1, 1))(output1)
+    model = Model(inputs=inputs1, outputs=r1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
+
