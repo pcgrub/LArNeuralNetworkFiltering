@@ -1,0 +1,9 @@
+*.DS_Store
+*.pyc
+utils/*
+*.h5
+*.root
+plots/*
+re_plots/*
+saved-models/*
+training_data/*
