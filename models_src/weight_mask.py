@@ -28,6 +28,14 @@ class WeightMask():
         """set specific bias in layer number "layer_index", at node number "node"."""
         self.mask[layer_index][node] = 0
 
+    def prune_parameter(self, layer_index, prune_index):
+        """prune parameter independent of being weight or bias"""
+        if len(prune_index) == 2:
+            self.prune_weight(layer_index, *prune_index)
+        else:
+            self.prune_bias(layer_index, prune_index)
+
+
     def apply_mask(self, model):
         """multiply mask with weights of model an returning model with new weights"""
         weights = model.get_weights()
