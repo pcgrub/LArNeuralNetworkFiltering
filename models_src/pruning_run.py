@@ -9,9 +9,9 @@ from models_src.weight_mask import WeightMask
 
 
 # Limit number of threads to one master-thread and one worker-thread
-tf_config = K.tf.ConfigProto(intra_op_parallelism_threads=1,
+TF_CONFIG = K.tf.ConfigProto(intra_op_parallelism_threads=1,
                              inter_op_parallelism_threads=1)
-K.set_session(K.tf.Session(config=tf_config))
+K.set_session(K.tf.Session(config=TF_CONFIG))
 
 
 class PruningRun():
@@ -64,10 +64,7 @@ class PruningRun():
             if 0 < pruned_value < threshold and number_of_pruned_values < max_weights:
 
                 # Set weight in layer 'layer_index' and location 'prune_index' to 0
-                if len(prune_index) == 2:
-                    self.mask.prune_weight(layer_index, *prune_index)
-                else:
-                    self.mask.prune_bias(layer_index, prune_index)
+                self.mask.prune_parameter(layer_index, prune_index)
                 self.model = self.mask.apply_mask(self.model)
 
                 # During the process the WeightMask has to be applied
@@ -134,11 +131,7 @@ class PruningRun():
             # weights are pruned
             if 0 < pruned_value < threshold and number_of_pruned_values < max_weights:
 
-                # Set weight in layer 'layer_index' and location 'prune_index' to 0
-                if len(prune_index) == 2:
-                    self.mask.prune_weight(layer_index, *prune_index)
-                else:
-                    self.mask.prune_bias(layer_index, prune_index)
+                self.mask.prune_parameter(layer_index, prune_index)
                 self.model = self.mask.apply_mask(self.model)
 
                 number_of_pruned_values += 1

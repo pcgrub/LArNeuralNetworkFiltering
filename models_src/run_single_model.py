@@ -1,20 +1,20 @@
+"""Overall Doc"""
+
 import os
-import numpy as np
 from keras import backend as K
 from keras.callbacks import TensorBoard
-from .training_data import TrainingData
-from .weight_mask import WeightMask
-from .pruning_callback import PruningCallback
 
 
 # Limit number of threads to one master-thread and one worker-thread
-tf_config = K.tf.ConfigProto(intra_op_parallelism_threads=1,
+TF_CONFIG = K.tf.ConfigProto(intra_op_parallelism_threads=1,
                              inter_op_parallelism_threads=1)
-K.set_session(K.tf.Session(config=tf_config))
+K.set_session(K.tf.Session(config=TF_CONFIG))
 
 
 class RunSingleModel:
-
+    """
+    Class Docstring
+    """
     def __init__(self, model, runs, epochs, params, training_data, comments):
         '''
         Construct and initialize a model including all parameters required:
@@ -22,7 +22,7 @@ class RunSingleModel:
         'model' - a compilable Keras Model
         'epochs' - number of training epochs
         'params' - additional parameters for the Model
-        'training_params' - paramaters required for processing training data
+        'training_params' - parameters required for processing training data
         'comments' - info to be passed into the foldernames of output-data
         '''
         self.name = str(model.__name__)
@@ -74,8 +74,8 @@ class RunSingleModel:
 
 
         # iterate until the number of runs specified have been carried out,
-        # regardless of how many runs have been carried out previousky
-        while runs_completed<self.runs:
+        # regardless of how many runs have been carried out previously
+        while runs_completed < self.runs:
             log_dir = model_path + 'Graph/' + self.sim_title \
                                 + '/run' + str(total_run_number) + '/'
 
@@ -95,13 +95,11 @@ class RunSingleModel:
         current_model = self.model(*self.params)
 
         # Enable TensorBoard analytic files
-        tbCallBack = TensorBoard(log_dir=log_dir, histogram_freq=0, write_images=True,
+        tb_call = TensorBoard(log_dir=log_dir, histogram_freq=0, write_images=True,
                                  write_graph=True)
         # Training
         current_model.fit(*train, validation_data=test, epochs=self.epochs, verbose=2,
-                  callbacks=[tbCallBack])
+                          callbacks=[tb_call])
 
         # save models and weights
         current_model.save(log_dir + self.sim_title + ".h5")
-        #del current_model
-
