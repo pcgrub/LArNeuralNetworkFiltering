@@ -8,7 +8,7 @@ from models_src.pruning_callback import PruningCallback
 from models_src.weight_mask import WeightMask
 
 
-# Limit number of threads to one master-thread and one worker-thread
+# Limit number of threads on the CPU to one master-thread and one worker-thread
 TF_CONFIG = K.tf.ConfigProto(intra_op_parallelism_threads=1,
                              inter_op_parallelism_threads=1)
 K.set_session(K.tf.Session(config=TF_CONFIG))
@@ -39,7 +39,6 @@ class PruningRun():
 
         """
         number_of_pruned_values = 0
-        path_for_saving, file_name = os.path.split(self.model_path)
         while True:
 
             # Get all weights in the respective layer with index 'layer_index'
@@ -85,11 +84,8 @@ class PruningRun():
         pruning_call = PruningCallback(self.mask)
         self.model.fit(*self.train, validation_data=self.test, epochs=20, verbose=2,
                        callbacks=[pruning_call])
+        self.save_pruned_model()
 
-        rem_weights = self.get_remaining_weights_number()
-
-        self.model.save(path_for_saving + 'Remaining_weights'
-                        + str(rem_weights) + '_' + file_name)
 
     def prune_layer_no_retraining(self, layer_index, threshold):
         """
@@ -105,8 +101,6 @@ class PruningRun():
 
         """
         number_of_pruned_values = 0
-        path_for_saving, file_name = os.path.split(self.model_path)
-
 
         while True:
 
@@ -141,11 +135,21 @@ class PruningRun():
                 break
 
         self.model.compile(loss='mean_squared_error', optimizer='adam')
+        self.save_pruned_model()
+
+    def save_pruned_model(self):
+        """Doc String"""
         rem_weights = self.get_remaining_weights_number()
 
-        self.model.save(path_for_saving + 'Remaining_weights'
+        path_for_saving, file_name = os.path.split(self.model_path)
+        self.model.save(path_for_saving + '/' + 'Remaining_weights'
                         + str(rem_weights) + '_noretrain_' + file_name)
 
+    def propagate_pruning(self, lower_layer_index, higher_layer_index):
+        """Doc String"""
+        self.mask.propagate_pruning(lower_layer_index, higher_layer_index)
+        self.mask.apply_mask(self.model)
+        self.save_pruned_model()
 
     def get_remaining_weights_number(self):
         """

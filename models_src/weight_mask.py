@@ -44,9 +44,7 @@ class WeightMask():
         model.set_weights(weights)
         return model
 
-    def propagate_pruning(self, higher_layer_index, lower_layer_index):
+    def propagate_pruning(self, lower_layer_index, higher_layer_index):
         for i,entry in enumerate(self.mask[higher_layer_index]):
             if entry==0:
                 self.mask[lower_layer_index][i,:] = 0
-
-
