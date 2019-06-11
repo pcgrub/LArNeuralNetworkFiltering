@@ -149,7 +149,6 @@ class TrainingData():
         specifications, .i.e the output samples should be given after 'delay-1'
         samples of the corresponding detector pulse.
 
-
         Parameters:
         delay - number of samples the output should be delayed
         slice_len - number of samples given as input
@@ -212,13 +211,14 @@ class TrainingData():
         Finding all files with a certain prefix and returning
         data from those files
 
+        Parameters:
+        path - containing files with 10000 Training samples each
+        prefix - file prefix for each of these files
+
         Returns:
         list with each element being a three column matrix according to
         'self.process_inputs'
 
-        Parameters:
-        path - containing files with 10000 Training samples each
-        prefix - file prefix for each of these files
         """
 
         sets = []
@@ -228,3 +228,26 @@ class TrainingData():
                 sets.append(self.process_input(file_name))
 
         return sets
+
+    def classification_td(self, slice_len, delay, threshold):
+        """
+        Generate Training data for the output of triggering decisions.
+
+        Parameters:
+        delay - number of samples the output should be delayed
+        slice_len - number of samples given as input
+        threshold - Above this value the trigger returns 1, below 0
+
+        Returns:
+        Training Data with 30sample windows input and trigger output 0 or 1.
+        """
+        (x_train, y_train), (x_test, y_test) = self.window_dim_1_sized_td(slice_len, delay)
+
+        trigger_train = y_train > threshold
+        trigger_test = y_test > threshold
+
+        y_train = trigger_train.astype(int)
+        y_test = trigger_test.astype(int)
+
+        return (x_train, y_train), (x_test, y_test)
+
