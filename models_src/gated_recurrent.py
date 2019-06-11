@@ -31,6 +31,32 @@ def GatedRecurrentTLFN(dim, l):
     print(model.summary())
     return model
 
+def GatedRecurrent9GRUClassification(dim, l):
+    # l=9 for Signal
+    # 10 GRUS, 5 Dense for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(l)(inputs1)
+    dense1 = Dense(l, activation='relu')(gru1)
+    output1 = Dense(1)(dense1)
+    r1 = Reshape((1, 1))(output1)
+    model = Model(inputs=inputs1, outputs=r1)
+    model.compile(loss='binary_crossentropy', optimizer='adam')
+    print(model.summary())
+    return model
+
+
+def GatedRecurrentTLFNClassification(dim, l):
+    # l=12 for Signal
+    # (10,0,10) for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(1, return_sequences=True)(inputs1)
+    r1 = Reshape((1, dim))(gru1)
+    dense1 = Dense(l, activation='relu')(r1)
+    output1 = Dense(1)(dense1, activation='sigmoid')
+    model = Model(inputs=inputs1, outputs=output1)
+    model.compile(loss='binary_crossentropy', optimizer='adam')
+    print(model.summary())
+    return model
 
 def GatedRecurrentNonSequentialStacked(dim,n,l):
     inputs1 = Input(shape=(dim, 1))
