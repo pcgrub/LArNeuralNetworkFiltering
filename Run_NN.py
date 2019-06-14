@@ -11,7 +11,9 @@ def main():
     runs = 1
     epochs = 150
 
+    # delay to original data
     delay = 6
+    # number of samples to be passed to nn
     slice_len = 30
 
     training_params = (slice_len, delay)
