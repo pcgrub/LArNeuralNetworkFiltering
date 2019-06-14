@@ -1,6 +1,8 @@
 import sys
+
 # Path to models_src
-# sys.path.insert(0, '..')
+sys.path.insert(0, '..')
+
 from models_src import *
 def main():
     model = GatedRecurrentTLFN
@@ -24,7 +26,7 @@ def main():
     comments = 'OFdataset'
 
 
-    td1 = TrainingData()
+    td1 = TrainingData(path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/OFMaxFinder/', prefix='EMB_EMMiddle_0.5125X0.0125_OF_')
     training_data = td1.window_dim_1_sized_td(*training_params)
 
     run1 = RunSingleModel(model, runs, epochs, params,
