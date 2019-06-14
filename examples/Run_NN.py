@@ -25,7 +25,7 @@ def main():
 
     comments = 'OFdataset'
 
-
+    # TrainingData path and file prefixes
     td1 = TrainingData(path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/OFMaxFinder/', prefix='EMB_EMMiddle_0.5125X0.0125_OF_')
     training_data = td1.window_dim_1_sized_td(*training_params)
 
