@@ -1,13 +1,13 @@
-from models_src import *
 import sys
-
-
+# Path to models_src
+# sys.path.insert(0, '..')
+from models_src import *
 def main():
-    model = GatedRecurrentTLFNreg
+    model = GatedRecurrentTLFN
 
     # Training Parameters:
     runs = 1
-    epochs = 1
+    epochs = 150
 
     delay = 6
     slice_len = 30
@@ -17,11 +17,11 @@ def main():
     # Model specific parameters
     dim = slice_len
 
-    n = 2
+    # neurons in hidden layer
     l_neurons_per_layer = 30
     params = (dim, l_neurons_per_layer)
 
-    comments = 'l2reg0.01-30-adam-150_epochs-6d-OFdataset'
+    comments = 'OFdataset'
 
 
     td1 = TrainingData()
