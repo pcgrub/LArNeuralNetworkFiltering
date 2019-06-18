@@ -3,7 +3,7 @@
 import os
 from keras import backend as K
 from keras.callbacks import TensorBoard
-
+from models_src.analysis_callback import AnalysisCallback
 
 # Limit number of threads to one master-thread and one worker-thread
 TF_CONFIG = K.tf.ConfigProto(intra_op_parallelism_threads=1,
@@ -15,7 +15,8 @@ class RunSingleModel:
     """
     Class Docstring
     """
-    def __init__(self, model, runs, epochs, params, training_data, comments):
+    def __init__(self, model, runs, epochs, params,
+                 training_data, comments, scale):
         '''
         Construct and initialize a model including all parameters required:
         Parameters include:
@@ -39,10 +40,7 @@ class RunSingleModel:
         # The highest energy measured in the hit samples is stored
         # to be able to scale the data for being smaller or equal to 1
         # in the neural network processing and to be rescaled afterwards
-        self.scale = 0
-
-        # create empty file list for training data files
-        self.file_list = []
+        self.scale = scale
 
         # Number of Runs
         self.runs = runs
@@ -97,9 +95,10 @@ class RunSingleModel:
         # Enable TensorBoard analytic files
         tb_call = TensorBoard(log_dir=log_dir, histogram_freq=0, write_images=True,
                                  write_graph=True)
+        #ana_call = AnalysisCallback(test, self.scale, 0.8)
         # Training
         current_model.fit(*train, validation_data=test, epochs=self.epochs, verbose=2,
-                          callbacks=[tb_call])
+                          callbacks=[tb_call])#, ana_call])
 
         # save models and weights
         current_model.save(log_dir + self.sim_title + ".h5")
