@@ -50,10 +50,9 @@ class AnalysisCallback(Callback):
             ignore_index=True)
 
 
-    def on_training_end(self, logs={}):
+    def on_train_end(self, logs={}):
         loss = logs.get('loss')
         val_loss = logs.get('val_loss')
         self.analysis_df['loss'] = loss
         self.analysis_df['val_loss'] = val_loss
-        self.analysis_df.to_hdf(self.save_path + 'analysis.h5',
-                                key='analysis_df')
+        self.analysis_df.to_csv(self.save_path + 'analysis.csv')
