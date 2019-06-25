@@ -95,10 +95,10 @@ class RunSingleModel:
         # Enable TensorBoard analytic files
         tb_call = TensorBoard(log_dir=log_dir, histogram_freq=0, write_images=True,
                                  write_graph=True)
-        #ana_call = AnalysisCallback(test, self.scale, 0.8)
+        ana_call = AnalysisCallback(test, self.scale, 0.8, log_dir)
         # Training
         current_model.fit(*train, validation_data=test, epochs=self.epochs, verbose=2,
-                          callbacks=[tb_call])#, ana_call])
+                          callbacks=[tb_call, ana_call])
 
         # save models and weights
         current_model.save(log_dir + self.sim_title + ".h5")
