@@ -1,13 +1,19 @@
+"""
+Make a prediction between epochs and save characteristic values
+
+The characteristic values are stored on training end into an hdf5.file
+"""
 from keras.callbacks import Callback
 import numpy as np
 import pandas as pd
 
-"""Make a prediction between epochs and save characteristic values"""
 
 class AnalysisCallback(Callback):
-    def __init__(self, test, scale, pu_threshold):
+    def __init__(self, testing_data, scale, pu_threshold, save_path):
         super().__init__()
-        self.test = test
+
+        # pass data used for validation process
+        self.testing_data = testing_data
         self.scale = scale
         self.pu_threshold = pu_threshold
         columns = ['epoch',
@@ -16,6 +22,7 @@ class AnalysisCallback(Callback):
                    'mean_pu', 'median_pu', 'std_pu',
                    '1percentile_pu', '99percentile_pu']
         self.analysis_df = pd.DataFrame(columns=columns)
+        self.save_path = save_path
 
     def on_epoch_end(self, epoch, logs=None):
         x_test, y_test = self.testing_data
@@ -48,6 +55,5 @@ class AnalysisCallback(Callback):
         val_loss = logs.get('val_loss')
         self.analysis_df['loss'] = loss
         self.analysis_df['val_loss'] = val_loss
-        self.analysis_df.to_hdf(
-            '/home/cgrubitz/nn_models/output/test_analysis.h5',
-            key='analysis_df')
+        self.analysis_df.to_hdf(self.save_path + 'analysis.h5',
+                                key='analysis_df')
