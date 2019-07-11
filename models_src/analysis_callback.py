@@ -20,7 +20,8 @@ class AnalysisCallback(Callback):
                    'mean_sig', 'median_sig', 'std_sig',
                    '1percentile_sig', '99percentile_sig',
                    'mean_pu', 'median_pu', 'std_pu',
-                   '1percentile_pu', '99percentile_pu']
+                   '1percentile_pu', '99percentile_pu',
+                   'loss', 'validation_loss']
         self.analysis_df = pd.DataFrame(columns=columns)
         self.save_path = save_path
 
@@ -31,6 +32,9 @@ class AnalysisCallback(Callback):
         difference = results-y_true
         diff_sig = difference[y_true>self.pu_threshold]
         diff_pu = difference[y_true<= self.pu_threshold]
+
+        loss = logs.get('loss')
+        val_loss = logs.get('val_loss')
 
         self.analysis_df = self.analysis_df.append(
             {'mean_sig' : np.mean(diff_sig),
@@ -45,14 +49,12 @@ class AnalysisCallback(Callback):
              '1percentile_pu' : np.percentile(diff_pu, 1),
              '99percentile_pu' : np.percentile(diff_pu, 99),
 
-             'epoch': epoch
-             },
-            ignore_index=True)
+             'epoch': epoch,
+             'loss': loss,
+             'validation_loss': val_loss
+
+             }, ignore_index=True)
 
 
-    def on_train_end(self, logs={}):
-        loss = logs.get('loss')
-        val_loss = logs.get('val_loss')
-        self.analysis_df['loss'] = loss
-        self.analysis_df['val_loss'] = val_loss
+    def on_train_end(self ,logs={}):
         self.analysis_df.to_csv(self.save_path + 'analysis.csv')
