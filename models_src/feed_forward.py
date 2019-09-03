@@ -3,7 +3,7 @@ from keras.layers import Dense, Input, Reshape
 from .loss_functions import *
 
 
-def BaselineReLU(dim, n):
+def BaselineReLU(dim):
     ini = 'RandomUniform'
     inputs1 = Input(shape=(dim, 1))
     r1 = Reshape((1, dim))(inputs1)
@@ -16,7 +16,7 @@ def BaselineReLU(dim, n):
     return model
 
 
-def Baseline(dim, n):
+def Baseline(dim):
     ini = 'RandomUniform'
     inputs1 = Input(shape=(dim, 1))
     r1 = Reshape((1, dim))(inputs1)
@@ -29,25 +29,25 @@ def Baseline(dim, n):
     return model
 
 
-def TLFN(dim, n):
+def TLFN(dim):
     ini = 'RandomUniform'
     inputs1 = Input(shape=(dim, 1))
     r1 = Reshape((1, dim))(inputs1)
     dense1 = Dense(dim, activation='relu', kernel_initializer=ini)(r1)
     dense = Dense(1, kernel_initializer=ini)(dense1)
     model = Model(inputs=inputs1, outputs=dense)
-    model.compile(loss='mean_squared_error', optimizer='RMSprop')
+    model.compile(loss='mean_squared_error', optimizer='adam')
     print(model.summary())
     return model
 
 
-def TLFNNoReLU(dim, n):
+def TLFNNoReLU(dim):
     ini = 'RandomUniform'
     inputs1 = Input(shape=(dim, 1))
     r1 = Reshape((1, dim))(inputs1)
     dense1 = Dense(dim, kernel_initializer=ini)(r1)
     dense = Dense(1, kernel_initializer=ini)(dense1)
     model = Model(inputs=inputs1, outputs=dense)
-    model.compile(loss='mean_squared_error', optimizer='RMSprop')
+    model.compile(loss='mean_squared_error', optimizer='adam')
     print(model.summary())
     return model
