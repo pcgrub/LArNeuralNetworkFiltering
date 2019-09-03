@@ -3,7 +3,26 @@ from keras.layers import GRU, Dense, LSTM, Input, Reshape
 from keras.regularizers import l2
 from .loss_functions import *
 
+def GruOnly(dim):
+    inputs1 = Input(shape=(dim, 1))
+    gru1 = GRU(1)(inputs1)
+    r1 = Reshape((1, 1))(gru1)
+    model = Model(inputs=inputs1, outputs=r1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
 
+def GruOnlyStacked(dim, n):
+    inputs1 = Input(shape=(dim, 1))
+    hidden_layers = [inputs1]
+    for i in range(n-1):
+        hidden_layers.append(GRU(1, return_sequences=True)(hidden_layers[i]))
+    hidden_layers.append(GRU(1)(hidden_layers[-1]))
+    r1 = Reshape((1, 1))(hidden_layers[-1])
+    model = Model(inputs=inputs1, outputs=r1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
 def GatedRecurrentNonSequential(dim, l):
     # l=9 for Signal
     # 10 GRUS, 5 Dense for Pile Up
@@ -16,7 +35,6 @@ def GatedRecurrentNonSequential(dim, l):
     model.compile(loss='mean_squared_error', optimizer='adam')
     print(model.summary())
     return model
-
 
 def GatedRecurrentTLFN(dim, l):
     # l=12 for Signal
@@ -40,7 +58,7 @@ def GatedRecurrent9GRUClassification(dim, l):
     output1 = Dense(1, activation='sigmoid')(dense1)
     r1 = Reshape((1, 1))(output1)
     model = Model(inputs=inputs1, outputs=r1)
-    model.compile(loss='binary_crossentropy', optimizer='adam')
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
     return model
 
@@ -54,7 +72,7 @@ def GatedRecurrentTLFNClassification(dim, l):
     dense1 = Dense(l, activation='sigmoid')(r1)
     output1 = Dense(1, activation='sigmoid')(dense1)
     model = Model(inputs=inputs1, outputs=output1)
-    model.compile(loss='binary_crossentropy', optimizer='adam')
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
     return model
 
@@ -112,6 +130,59 @@ def GatedRecurrentNonSequentialreg(dim, l):
     r1 = Reshape((1, 1))(output1)
     model = Model(inputs=inputs1, outputs=r1)
     model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
+
+def LSTMNonSequential(dim, l):
+    # l=9 for Signal
+    # 10 LSTMS, 5 Dense for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    lstm1 = LSTM(l)(inputs1)
+    dense1 = Dense(l, activation='relu')(lstm1)
+    output1 = Dense(1)(dense1)
+    r1 = Reshape((1, 1))(output1)
+    model = Model(inputs=inputs1, outputs=r1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
+
+def LSTMTLFN(dim, l):
+    # l=12 for Signal
+    # (10,0,10) for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    lstm1 = LSTM(1, return_sequences=True)(inputs1)
+    r1 = Reshape((1, dim))(lstm1)
+    dense1 = Dense(l, activation='relu')(r1)
+    output1 = Dense(1)(dense1)
+    model = Model(inputs=inputs1, outputs=output1)
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    print(model.summary())
+    return model
+
+def LSTM9Classification(dim, l):
+    # l=9 for Signal
+    # 10 LSTMS, 5 Dense for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    lstm1 = LSTM(l)(inputs1)
+    dense1 = Dense(l, activation='tanh')(lstm1)
+    output1 = Dense(1, activation='sigmoid')(dense1)
+    r1 = Reshape((1, 1))(output1)
+    model = Model(inputs=inputs1, outputs=r1)
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    print(model.summary())
+    return model
+
+
+def LSTMTLFNClassification(dim, l):
+    # l=12 for Signal
+    # (10,0,10) for Pile Up
+    inputs1 = Input(shape=(dim, 1))
+    lstm1 = LSTM(1, return_sequences=True)(inputs1)
+    r1 = Reshape((1, dim))(lstm1)
+    dense1 = Dense(l, activation='sigmoid')(r1)
+    output1 = Dense(1, activation='sigmoid')(dense1)
+    model = Model(inputs=inputs1, outputs=output1)
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
     return model
 
