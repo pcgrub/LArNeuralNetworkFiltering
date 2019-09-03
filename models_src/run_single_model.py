@@ -6,9 +6,9 @@ from keras.callbacks import TensorBoard
 from models_src.analysis_callback import AnalysisCallback
 
 # Limit number of threads to one master-thread and one worker-thread
-TF_CONFIG = K.tf.ConfigProto(intra_op_parallelism_threads=1,
+TF_CONFIG = K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=1,
                              inter_op_parallelism_threads=1)
-K.set_session(K.tf.Session(config=TF_CONFIG))
+K.set_session(K.tf.compat.v1.Session(config=TF_CONFIG))
 
 
 class RunSingleModel:
@@ -102,3 +102,8 @@ class RunSingleModel:
 
         # save models and weights
         current_model.save(log_dir + self.sim_title + ".h5")
+
+        # export json file
+        model_json = current_model.to_json()
+        with open(log_dir + self.sim_title + ".json", "w") as json_file:
+            json_file.write(model_json)

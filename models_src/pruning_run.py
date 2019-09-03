@@ -9,9 +9,9 @@ from models_src.weight_mask import WeightMask
 
 
 # Limit number of threads on the CPU to one master-thread and one worker-thread
-TF_CONFIG = K.tf.ConfigProto(intra_op_parallelism_threads=1,
+TF_CONFIG = K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=1,
                              inter_op_parallelism_threads=1)
-K.set_session(K.tf.Session(config=TF_CONFIG))
+K.set_session(K.tf.compat.v1.Session(config=TF_CONFIG))
 
 
 class PruningRun():
