@@ -250,3 +250,26 @@ class TrainingData():
         y_test = trigger_test.astype(int)
 
         return (x_train, y_train), (x_test, y_test)
+
+
+    def classification_of(self, total_length, threshold):
+        """
+        Generate Optimal Filter data for the output of triggering decisions.
+
+        Parameters:
+        total_length - length of output data sets
+        threshold - Above this value the trigger returns 1, below 0
+
+        Returns:
+        Training Data with 30sample windows input and trigger output 0 or 1.
+        """
+
+        of_train, of_test = self.of_data(total_length)
+
+        trigger_train = of_train > threshold
+        trigger_test = of_test > threshold
+
+        of_train = trigger_train.astype(int)
+        of_test = trigger_test.astype(int)
+
+        return of_train, of_test
