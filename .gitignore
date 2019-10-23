@@ -6,5 +6,4 @@ utils/*
 plots/*
 re_plots/*
 saved_models/*
-training_data/*
-output/*
+thesis_scripts/*
