@@ -1,4 +1,4 @@
-"""Overall Doc"""
+
 
 import os
 from keras import backend as K
@@ -12,19 +12,23 @@ K.set_session(K.tf.compat.v1.Session(config=TF_CONFIG))
 
 
 class RunSingleModel:
-    """
-    Class Docstring
-    """
+   
+   
+   
     def __init__(self, model, runs, epochs, params,
                  training_data, comments, scale):
         '''
-        Construct and initialize a model including all parameters required:
+        Construct and initialize a model including all parameters
+        required:
+
         Parameters include:
         'model' - a compilable Keras Model
         'epochs' - number of training epochs
         'params' - additional parameters for the Model
-        'training_params' - parameters required for processing training data
-        'comments' - info to be passed into the foldernames of output-data
+        'training_params' - parameters required for processing
+        training data
+        'comments' - info to be passed into the foldernames of
+        output-data
         '''
         self.name = str(model.__name__)
         self.model = model
@@ -39,18 +43,18 @@ class RunSingleModel:
 
         # The highest energy measured in the hit samples is stored
         # to be able to scale the data for being smaller or equal to 1
-        # in the neural network processing and to be rescaled afterwards
+        # in the neural network processing and to be rescaled
+        # afterwards
         self.scale = scale
 
         # Number of Runs
         self.runs = runs
 
-        # create empty value_loss history array with an entry for each epoch
-        # self.value_loss = np.zeros((1, epochs))
 
     def run(self):
         """carry out one or multiple runs of training"""
-        # create overall path for trained model and Tensorboard Graphs
+        # create overall path for trained model and Tensorboard
+        # Graphs
         if self.comments == '':
             model_path = './saved_models/' + self.name + '/'
 
@@ -71,8 +75,9 @@ class RunSingleModel:
         total_run_number = 1
 
 
-        # iterate until the number of runs specified have been carried out,
-        # regardless of how many runs have been carried out previously
+        # iterate until the number of runs specified have been
+        # carried out,  regardless of how many runs have been
+        # carried out previously
         while runs_completed < self.runs:
             log_dir = model_path + 'Graph/' + self.sim_title \
                                 + '/run' + str(total_run_number) + '/'
@@ -93,11 +98,12 @@ class RunSingleModel:
         current_model = self.model(*self.params)
 
         # Enable TensorBoard analytic files
-        tb_call = TensorBoard(log_dir=log_dir, histogram_freq=0, write_images=True,
-                                 write_graph=True)
+        tb_call = TensorBoard(log_dir=log_dir, histogram_freq=0,
+                              write_images=True, write_graph=True)
         ana_call = AnalysisCallback(test, self.scale, 0.8, log_dir)
         # Training
-        current_model.fit(*train, validation_data=test, epochs=self.epochs, verbose=2,
+        current_model.fit(*train, validation_data=test,
+                          epochs=self.epochs, verbose=2,
                           callbacks=[tb_call, ana_call])
 
         # save models and weights
@@ -105,5 +111,6 @@ class RunSingleModel:
 
         # export json file
         model_json = current_model.to_json()
-        with open(log_dir + self.sim_title + ".json", "w") as json_file:
+        with open(log_dir + self.sim_title + ".json", "w") \
+             as json_file:
             json_file.write(model_json)

@@ -7,27 +7,25 @@ Parameters:
 path - containing files with 10000 Training samples each
 prefix - file prefix for each of these files
 
-Defaults:
-path = /ZIH.fast/users/ML_berthold_grubitz/data/TestCell/ofMaxFinder/
-prefix = EMB_EMMiddle_0.5125X0.0125_of_
-
 
 Methods:
 of_data - Returns the output the Optimal-Filter+Maxfinder would give
           on the training and testing set
 
-delayed_td - Returns training data where the output is delayed by n samples
+delayed_td - Returns training data where the output is delayed by
+             n samples
 
 chunk_td - Generating unprocessed training data
 
-window_dim_1_sized_td - Generates processed training data, where an input of
-                        length 'slice_len' is mapped to an output of length 1.
-                        The output gets delayed to match specifications,
-                        i.e the output samples should be given after 'delay-1'
-                        samples of the corresponding detector pulse.
+window_dim_1_sized_td - 
+         Generates processed training data, where an input of
+         length 'slice_len' is mapped to an output of length 1.
+         The output gets delayed to match specifications,
+         i.e the output samples should be given after 'delay-1'
+         samples of the corresponding detector pulse.
 
-create_input_files - Finding all files with a certain prefix and returning
-                     data from those files.
+create_input_files - Finding all files with a certain prefix
+                     and returning data from those files.
 
 """
 
@@ -36,8 +34,8 @@ import numpy as np
 import h5py
 
 class TrainingData():
-    def __init__(self, path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/OFMaxFinder/',
-                 prefix='EMB_EMMiddle_0.5125X0.0125_OF_'):
+    def __init__(self,
+                 path,prefix):
         sets = self.create_input_files(path=path, prefix=prefix) 
         self.eT_scale = np.amax(sets)
         self.normalized = sets / self.eT_scale
@@ -45,13 +43,8 @@ class TrainingData():
 
     def process_input(self, input_path):
         """
-        Extracting relevant columns from an HDF5-input file
-
-        The columns are:
-        'dig_eT' - Digitizer Output, E_T [GeV]
-        'hit_eT' - real deposited enegery, E_T [GeV]
-        'OFMax_eT' - Energy reconstruction using Optimal-Filter+Maximum-Finder,
-        E_T [GeV]
+        Extractingy reconstruction using
+        Optimal-Filter+Maximum-Finder, E_T [GeV]
 
         Returns:
         numpy-ndarray containing the three clolumns
@@ -72,8 +65,8 @@ class TrainingData():
         total_length - length of output data sets
 
         Returns:
-        Pair training set and testing set, each being pair of input and output
-        data.
+        Pair training set and testing set, each being pair of input
+        and output data.
         """
         of_sets = np.asarray(self.normalized[:, :, 2])
         of_train, of_test = np.split(np.asarray(of_sets), 2, axis=1)
@@ -99,14 +92,15 @@ class TrainingData():
 
     def delayed_td(self, n):
         """
-        Returns training data where the output is delayed by n samples
+        Returns training data where the output is delayed by
+        n samples
 
         Parameters:
         n - number of samples the output should be delayed
 
         Returns:
-        Pair training set and testing set, each being pair of input and output
-        data.
+        Pair training set and testing set, each being pair of input
+        and output data.
         """
         (x_train, y_train), (x_test, y_test) = self.chunk_td()
 
@@ -123,8 +117,8 @@ class TrainingData():
         Generating unprocessed training data.
 
         Returns:
-        Pair training set and testing set, each being pair of input and output
-        data.
+        Pair training set and testing set, each being pair of input
+        and output data.
         """
 
         d_norm = np.asarray(self.normalized[:, :, 0])
@@ -144,22 +138,24 @@ class TrainingData():
 
     def window_dim_1_sized_td(self, slice_len, delay):
         """
-        Generates processed training data, where an input of length 'slice_len'
-        is mapped to an output of length 1. The output gets delayed to match
-        specifications, .i.e the output samples should be given after 'delay-1'
-        samples of the corresponding detector pulse.
+        Generates processed training data, where an input of length
+        'slice_len' is mapped to an output of length 1. The output
+        gets delayed to match specifications, .i.e the output
+        samples should be given after 'delay-1' samples of the
+        corresponding detector pulse.
 
         Parameters:
         delay - number of samples the output should be delayed
         slice_len - number of samples given as input
 
         Returns:
-        Pair training set and testing set, each being pair of input and output
-        data.
+        Pair training set and testing set, each being pair of input
+        and output data.
         """
         (x_train, y_train), (x_test, y_test) = self.delayed_td(delay)
 
-        # Process input into overlapping slices with length "slice_len"
+        # Process input into overlapping slices with length
+        # "slice_len"
         x_train = self.split_up(x_train, slice_len)
         x_test = self.split_up(x_test, slice_len)
 
@@ -216,8 +212,8 @@ class TrainingData():
         prefix - file prefix for each of these files
 
         Returns:
-        list with each element being a three column matrix according to
-        'self.process_inputs'
+        list with each element being a three column matrix according
+        to 'self.process_inputs'
 
         """
 
@@ -239,9 +235,11 @@ class TrainingData():
         threshold - Above this value the trigger returns 1, below 0
 
         Returns:
-        Training Data with 30sample windows input and trigger output 0 or 1.
+        Training Data with 30sample windows input and trigger output
+        0 or 1.
         """
-        (x_train, y_train), (x_test, y_test) = self.window_dim_1_sized_td(slice_len, delay)
+        (x_train, y_train), (x_test, y_test) = \
+        self.window_dim_1_sized_td(slice_len, delay)
 
         trigger_train = y_train > threshold
         trigger_test = y_test > threshold
@@ -254,14 +252,16 @@ class TrainingData():
 
     def classification_of(self, total_length, threshold):
         """
-        Generate Optimal Filter data for the output of triggering decisions.
+        Generate Optimal Filter data for the output of triggering
+        decisions.
 
         Parameters:
         total_length - length of output data sets
         threshold - Above this value the trigger returns 1, below 0
 
         Returns:
-        Training Data with 30sample windows input and trigger output 0 or 1.
+        Training Data with 30sample windows input and trigger
+        output 0 or 1.
         """
 
         of_train, of_test = self.of_data(total_length)
