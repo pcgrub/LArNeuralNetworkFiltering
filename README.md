@@ -7,6 +7,6 @@ Different models of neural networks to be tested for energy reconstruction in th
 tensorflow, numpy, h5py, pandas
 
 ## Usage 
-`cp examples/Run_NN.py .`
+`cp examples/Run_NN.py .`  
 `python3 Run_NN.py`
 
