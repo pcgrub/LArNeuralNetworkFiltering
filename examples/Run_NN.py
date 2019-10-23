@@ -5,28 +5,27 @@ sys.path.insert(0, '..')
 
 from models_src import *
 def main():
-    model = GatedRecurrentTLFN
+    model = igru_regression
 
     # Training Parameters:
     runs = 1
-    epochs = 150
+    epochs = 5
 
+    # training data parameters
     delay = 6
     slice_len = 30
 
     training_params = (slice_len, delay)
 
-    # Model specific parameters
-    dim = slice_len
-
     # neurons in hidden layer
     l_neurons_per_layer = 30
-    params = (dim, l_neurons_per_layer)
+    params = (slice_len, l_neurons_per_layer)
 
-    comments = 'OFdataset'
+    comments = 'some_comment'
 
     # TrainingData path and file prefixes
-    td1 = TrainingData(path='/ZIH.fast/users/ML_berthold_grubitz/data/TestCell/OFMaxFinder/', prefix='EMB_EMMiddle_0.5125X0.0125_OF_')
+    td1 = TrainingData(path='testdata/TestCell/OFMaxFinder/',
+                       prefix='EMB_EMMiddle_0.5125X0.0125_OF_')
     training_data = td1.window_dim_1_sized_td(*training_params)
 
 
