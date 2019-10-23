@@ -1,5 +1,5 @@
-from keras.models import Model
-from keras.layers import Dense, LSTM, Input, Reshape
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Dense, LSTM, Input, Reshape
 
 def ilstm_regression(window_size, n_of_neurons):
     inputs1 = Input(shape=(window_size, 1))

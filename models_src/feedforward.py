@@ -1,5 +1,5 @@
-from keras.models import Model
-from keras.layers import Dense, Input, Reshape
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Dense, Input, Reshape
 
 def tlfn(window_size, n_of_neurons):
     ini = 'RandomUniform'

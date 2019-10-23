@@ -1,15 +1,13 @@
 
-
+import tensorflow as tf
 import os
-from keras import backend as K
-from keras.callbacks import TensorBoard
+from tensorflow.keras.callbacks import TensorBoard
 from models_src.analysis_callback import AnalysisCallback
 
 # Limit number of threads to one master-thread and one worker-thread
-TF_CONFIG = K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=1,
-                             inter_op_parallelism_threads=1)
-K.set_session(K.tf.compat.v1.Session(config=TF_CONFIG))
-
+NUM_THREADS=1
+tf.config.threading.set_inter_op_parallelism_threads(NUM_THREADS)
+tf.config.threading.set_intra_op_parallelism_threads(NUM_THREADS)
 
 class RunSingleModel:
    

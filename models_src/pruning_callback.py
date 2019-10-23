@@ -1,4 +1,4 @@
-from keras.callbacks import Callback
+from tensorflow.keras.callbacks import Callback
 
 """Multiplies a models weights with a mask to avoid the updating of pruned weights."""
 

@@ -1,5 +1,5 @@
-from keras.models import Model
-from keras.layers import GRU, Dense, Input, Reshape
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import GRU, Dense, Input, Reshape
 
 
 def gru_only(window_size):

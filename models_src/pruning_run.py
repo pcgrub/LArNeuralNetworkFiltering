@@ -1,18 +1,16 @@
 """ Class implementing a pruning run """
-
+import tensorflow as tf
 import os
 import numpy as np
-from keras.models import load_model
-from keras import backend as K
+from tensorflow.keras.models import load_model
 from models_src.pruning_callback import PruningCallback
 from models_src.weight_mask import WeightMask
 
 
 # Limit number of threads on the CPU to one master-thread and one worker-thread
-TF_CONFIG = K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=1,
-                             inter_op_parallelism_threads=1)
-K.set_session(K.tf.compat.v1.Session(config=TF_CONFIG))
-
+NUM_THREADS=1
+tf.config.threading.set_inter_op_parallelism_threads(NUM_THREADS)
+tf.config.threading.set_intra_op_parallelism_threads(NUM_THREADS)
 
 class PruningRun():
     """
