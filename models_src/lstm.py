@@ -1,3 +1,9 @@
+"""
+Neural networks including LSTM-type neurons
+
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
+
 from keras.models import Model
 from keras.layers import Dense, LSTM, Input, Reshape
 

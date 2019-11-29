@@ -1,4 +1,8 @@
+"""
+Class implementing a number of training run for one specific model
 
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
 
 import os
 from keras import backend as K
@@ -12,9 +16,11 @@ K.set_session(K.tf.compat.v1.Session(config=TF_CONFIG))
 
 
 class RunSingleModel:
-   
-   
-   
+"""
+Class implementing a number of training run for one specific model
+
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
     def __init__(self, model, runs, epochs, params,
                  training_data, comments, scale):
         '''

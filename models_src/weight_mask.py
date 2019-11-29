@@ -6,6 +6,8 @@ weights.Initially all values are set to "1". The method prune_weight will set
 a given weight to "0". The method prune bias will set a given bias to "0".
 
 apply_mask will multiply a model's weights with the mask and returns an updated model.
+
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
 """
 
 class WeightMask():

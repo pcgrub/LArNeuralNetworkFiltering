@@ -1,4 +1,8 @@
-"""Doc_string"""
+"""
+Example pruning script
+
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
 
 
 #import os

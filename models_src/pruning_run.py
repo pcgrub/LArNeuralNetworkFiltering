@@ -1,4 +1,8 @@
-""" Class implementing a pruning run """
+"""
+Class implementing a pruning run
+
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
 
 import os
 import numpy as np
