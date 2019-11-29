@@ -1,3 +1,8 @@
+"""
+Time-lagged feedforward network with one hidden layer
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
+
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input, Reshape
 

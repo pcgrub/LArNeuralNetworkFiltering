@@ -1,3 +1,9 @@
+"""
+Example training script
+
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
+
 import sys
 
 # Path to models_src needs to be changed if file or module is moved

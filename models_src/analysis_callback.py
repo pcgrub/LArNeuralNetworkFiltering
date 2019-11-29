@@ -2,6 +2,7 @@
 Make a prediction between epochs and save characteristic values
 
 The characteristic values are stored on training end into an hdf5.file
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
 """
 from tensorflow.keras.callbacks import Callback
 import numpy as np

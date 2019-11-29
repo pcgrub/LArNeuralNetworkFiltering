@@ -1,3 +1,8 @@
+"""
+Neural networks including GRU-type neurons
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
+
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import GRU, Dense, Input, Reshape
 

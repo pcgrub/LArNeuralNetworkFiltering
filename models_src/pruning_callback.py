@@ -1,6 +1,10 @@
-from tensorflow.keras.callbacks import Callback
+"""
+Multiplies a models weights with a mask to avoid the updating of pruned weights.
 
-"""Multiplies a models weights with a mask to avoid the updating of pruned weights."""
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
+
+from tensorflow.keras.callbacks import Callback
 
 class PruningCallback(Callback):
     def __init__(self, mask):

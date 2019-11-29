@@ -1,6 +1,11 @@
+"""
+Class implementing a number of training run for one specific model
 
-import tensorflow as tf
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
+
 import os
+import tensorflow as tf
 from tensorflow.keras.callbacks import TensorBoard
 from models_src.analysis_callback import AnalysisCallback
 
@@ -10,9 +15,11 @@ tf.config.threading.set_inter_op_parallelism_threads(NUM_THREADS)
 tf.config.threading.set_intra_op_parallelism_threads(NUM_THREADS)
 
 class RunSingleModel:
-   
-   
-   
+"""
+Class implementing a number of training run for one specific model
+
+author: Clemens Grubitz (mailto:clemens@grubitz.eu)
+"""
     def __init__(self, model, runs, epochs, params,
                  training_data, comments, scale):
         '''
