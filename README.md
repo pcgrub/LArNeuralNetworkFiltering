@@ -1,6 +1,6 @@
 # NN_models
 
-Different models of neural networks to be tested for energy reconstruction in the LAr-calorimeter. Code has been upgraded to be used with Tensorflow 2.0.
+Different models of neural networks to be tested for energy reconstruction in the LAr-calorimeter. The code has been upgraded to work with Tensorflow 2.0. However execution with Tensorflow 1.14 should also work.
 
 ## Dependencies
 
