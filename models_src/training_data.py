@@ -1,14 +1,4 @@
 """
-Training data class
-
-author: Clemens Grubitz (mailto:clemens@grubitz.eu)
-"""
-import os
-import numpy as np
-import h5py
-
-class TrainingData():
-"""
 TrainingData class
 
 This class processes the data used for training and testing.
@@ -39,6 +29,11 @@ create_input_files - Finding all files with a certain prefix
 
 author: Clemens Grubitz (mailto:clemens@grubitz.eu)
 """
+import os
+import numpy as np
+import h5py
+
+class TrainingData():
     def __init__(self,
                  path,prefix):
         sets = self.create_input_files(path=path, prefix=prefix) 
