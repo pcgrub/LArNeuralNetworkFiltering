@@ -14,3 +14,13 @@ tensorflow, numpy, h5py, pandas
 `cp examples/Run_NN.py .`  
 `python3 Run_NN.py`
 
+
+## Docker image
+
+build the image using the provide Dockerfile by executing
+
+`docker build --pull --rm -f "Dockerfile" -t larneuralnetworkfiltering:latest "."`
+
+Since the *testdata* directory is not included it needs to be mounted to the image. A training run is executed using
+
+`docker run -v /PATH/TO/testdata:/lar/testdata -v /PATH/TO/saved_models:/lar/saved_models larneuralnetworkfiltering:latest`

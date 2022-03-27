@@ -8,3 +8,4 @@ re_plots/*
 saved_models/*
 thesis_scripts/*
 testdata/*
+.venv
