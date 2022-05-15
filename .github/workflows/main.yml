@@ -7,8 +7,8 @@ name: Publish Docker image
 
 on:
   push:
-    branches:
-      - 'master'
+    branches: ['master']
+    tags: ['latest']
 
 jobs:
   push_to_docker_hub:
