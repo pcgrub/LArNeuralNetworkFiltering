@@ -1,3 +1,5 @@
+![example event parameter](https://github.com/pcgrub/LArNeuralNetworkFiltering/actions/workflows/main.yml/badge.svg?event=push)
+
 # LAr Neural Network Filtering
 A Python 3 class library for training neural networks for energy reconstruction in the ATLAS LAr-Calorimeter at CERN. Different metrics are monitored during the training. For more details see [my master thesis](https://iktp.tu-dresden.de/IKTP/pub/19/Grubitz_Masterarbeit.pdf) 
 
@@ -20,6 +22,9 @@ tensorflow, numpy, h5py, pandas
 build the image using the provide Dockerfile by executing
 
 `docker build --pull --rm -f "Dockerfile" -t larneuralnetworkfiltering:latest "."`
+
+Alternatively pre-build images are available on [Docker Hub](https://hub.docker.com/repository/docker/pcgrub/larneuralnetworkfiltering)
+
 
 Since the *testdata* directory is not included it needs to be mounted to the image. A training run is executed using
 
