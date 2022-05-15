@@ -8,7 +8,6 @@ name: Publish Docker image
 on:
   push:
     branches: ['master']
-    tags: ['latest']
 
 jobs:
   push_to_docker_hub:
@@ -27,17 +26,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: |
-            pcgrub/larneuralnetworkfiltering
-      
       - name: Build and push Docker images
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: pcgrub/larneuralnetworkfiltering:latest
